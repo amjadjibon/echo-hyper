@@ -4,6 +4,10 @@ use futures::TryStreamExt as _;
 use hyper::service::{make_service_fn, service_fn};
 use hyper::{Body, Method, Request, Response, Server, StatusCode};
 
+// async fn hello_world(_req: Request<Body>) -> Result<Response<Body>, Infallible> {
+//     Ok(Response::new("Hello, World".into()))
+// }
+
 /// This is our service handler. It receives a Request, routes on its
 /// path, and returns a Future of a Response.
 async fn echo(req: Request<Body>) -> Result<Response<Body>, hyper::Error> {
@@ -49,6 +53,13 @@ async fn echo(req: Request<Body>) -> Result<Response<Body>, hyper::Error> {
     }
 }
 
+async fn shutdown_signal() {
+    // Wait for the CTRL+C signal
+    tokio::signal::ctrl_c()
+        .await
+        .expect("failed to install CTRL+C signal handler");
+}
+
 #[tokio::main]
 async fn main() {
     // We'll bind to 127.0.0.1:3000
@@ -64,7 +75,17 @@ async fn main() {
     let server = Server::bind(&addr).serve(make_svc);
 
     // Run this server for... forever!
-    if let Err(e) = server.await {
+    // if let Err(e) = server.await {
+    //     eprintln!("server error: {}", e);
+    // }
+
+    // And now add a graceful shutdown signal...
+    let graceful = server.with_graceful_shutdown(shutdown_signal());
+
+    // Run this server for... forever!
+    println!("server running on http://{}", addr);
+    if let Err(e) = graceful.await {
         eprintln!("server error: {}", e);
     }
+    println!(" gracefully shutdown complete")
 }
