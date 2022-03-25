@@ -3,6 +3,7 @@ use std::net::SocketAddr;
 use hyper::service::{make_service_fn, service_fn};
 use hyper::{Body, Request, Response, Server, StatusCode, header};
 use log::{debug, error, info};
+use std::env;
 
 async fn echo(req: Request<Body>) -> Result<Response<Body>, hyper::Error> {
     match (req.method(), req.uri().path()) {
@@ -29,9 +30,17 @@ async fn shutdown_signal() {
 
 #[tokio::main]
 async fn main() {
+    let port;
+    match env::var("PORT") {
+        Ok(val) => port = val,
+        Err(_e) => port = "8080".to_string(),
+    };
+    
+    let port = port.parse::<u16>().unwrap();
+
     env_logger::init();
     // We'll bind to 127.0.0.1:3000
-    let addr = SocketAddr::from(([127, 0, 0, 1], 3000));
+    let addr = SocketAddr::from(([0, 0, 0, 0], port));
 
     // A `Service` is needed for every connection, so this
     // creates one from our `hello_world` function.

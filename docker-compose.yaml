@@ -1,0 +1,11 @@
+version: "3.5"
+services:
+  echo:
+    container_name: "echo-hyper"
+    image: "amjadjibon/echo-hyper"
+    ports:
+      - "8080:8080"
+    environment:
+      PORT: 8080
+      RUST_LOG: "debug"
+    command: ["echo-hyper"]
