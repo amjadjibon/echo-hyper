@@ -1,5 +1,8 @@
-name: This a workflow title 
-on: [release] # When pushing to any branch then run this action
+name: docker-push
+on:
+  push:
+    tags:        
+      - v*
 # Env variable
 env:
   DOCKER_USER: ${{secrets.DOCKER_USER}}
