@@ -1,9 +1,9 @@
-use std::convert::Infallible;
-use std::net::SocketAddr;
 use hyper::service::{make_service_fn, service_fn};
-use hyper::{Body, Request, Response, Server, StatusCode, header};
+use hyper::{header, Body, Request, Response, Server, StatusCode};
 use log::{debug, error, info};
+use std::convert::Infallible;
 use std::env;
+use std::net::SocketAddr;
 
 async fn echo(req: Request<Body>) -> Result<Response<Body>, hyper::Error> {
     match (req.method(), req.uri().path()) {
@@ -16,7 +16,8 @@ async fn echo(req: Request<Body>) -> Result<Response<Body>, hyper::Error> {
             let response = Response::builder()
                 .status(StatusCode::OK)
                 .header(header::CONTENT_TYPE, "application/json")
-                .body(Body::from("{}")).unwrap();
+                .body(Body::from("{}"))
+                .unwrap();
             Ok(response)
         }
     }
@@ -35,7 +36,7 @@ async fn main() {
         Ok(val) => port = val,
         Err(_e) => port = "8080".to_string(),
     };
-    
+
     let port = port.parse::<u16>().unwrap();
 
     env_logger::init();
