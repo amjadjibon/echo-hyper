@@ -1,6 +1,6 @@
 [package]
 name = "echo-hyper"
-version = "1.0.0"
+version = "2.0.0"
 authors = ["Amjad Jibon <amjad.jibon@gmail.com>"]
 edition = "2018"
 
