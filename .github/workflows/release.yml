@@ -47,7 +47,7 @@ jobs:
         echo $DATE
   
     - name: Build the Docker image
-      run: docker build . --file Dockerfile --tag $DOCKER_USER/$REPO_NAME:$RELEASE_VERSION
+      run: docker build . --file Dockerfile --tag $DOCKER_USER/$REPO_NAME:${{ steps.versions.outputs.version }}
 
     - name: Docker Push
-      run: docker push $DOCKER_USER/$REPO_NAME:$RELEASE_VERSION
+      run: docker push $DOCKER_USER/$REPO_NAME:${{ steps.versions.outputs.version }}
