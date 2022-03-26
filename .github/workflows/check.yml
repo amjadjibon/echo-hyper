@@ -1,6 +1,5 @@
----
 on: [push, pull_request]
-name: Cargo Check
+name: Check
 jobs:
   check:
     name: Check
@@ -20,4 +19,3 @@ jobs:
         uses: actions-rs/cargo@v1
         with:
           command: check
----

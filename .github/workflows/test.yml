@@ -1,4 +1,3 @@
----
 on: [push, pull_request]
 name: Test
 jobs:
@@ -21,4 +20,3 @@ jobs:
         continue-on-error: true  # WARNING: only for this example, remove it!
         with:
           command: test
----
