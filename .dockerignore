@@ -1,4 +1,4 @@
 .git
 /target
 Dockerfile
-docker-compose.yaml
+docker-compose.yml
