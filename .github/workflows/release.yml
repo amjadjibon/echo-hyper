@@ -17,22 +17,22 @@ jobs:
         docker login -u $DOCKER_USER -p $DOCKER_PASSWORD
 
     - name: Set VERSION
-      id: vars
+      id: versions
       run: echo "::set-output name=version::$(cat VERSION)"
 
     - name: Check VERSION
       env:
-        RELEASE_VERSION: ${{ steps.vars.outputs.version }}
+        RELEASE_VERSION: ${{ steps.versions.outputs.version }}
       run: |
         echo $RELEASE_VERSION
 
     - name: Set TAG
-      id: vars
+      id: tags
       run: echo ::set-output name=tag::${GITHUB_REF#refs/*/}
 
     - name: Check TAG
       env:
-        RELEASE_TAG: ${{ steps.vars.outputs.tag }}
+        RELEASE_TAG: ${{ steps.tags.outputs.tag }}
       run: |
         echo $RELEASE_TAG
   
