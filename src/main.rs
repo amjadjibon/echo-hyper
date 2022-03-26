@@ -64,13 +64,13 @@ async fn run_server() {
 
 #[tokio::main]
 async fn main() {
-    run_server().await; 
+    run_server().await;
 }
 
 #[cfg(test)]
 mod test {
     use super::*;
-    use hyper::{Method, body::to_bytes, Client};
+    use hyper::{body::to_bytes, Client, Method};
     use tokio::runtime::Runtime;
     #[test]
     fn test_echo() {
@@ -98,9 +98,6 @@ mod test {
 
         println!("{:?}", body);
 
-        assert_eq!(
-            std::str::from_utf8(&body).unwrap(),
-            "{}"
-        );
+        assert_eq!(std::str::from_utf8(&body).unwrap(), "{}");
     }
 }
