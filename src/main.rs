@@ -29,8 +29,7 @@ async fn shutdown_signal() {
         .expect("failed to install CTRL+C signal handler");
 }
 
-#[tokio::main]
-async fn main() {
+async fn run_server() {
     let port;
     match env::var("PORT") {
         Ok(val) => port = val,
@@ -61,4 +60,47 @@ async fn main() {
         error!("server error: {}", e);
     }
     info!(" gracefully shutdown complete")
+}
+
+#[tokio::main]
+async fn main() {
+    run_server().await; 
+}
+
+#[cfg(test)]
+mod test {
+    use super::*;
+    use hyper::{Method, body::to_bytes, Client};
+    use tokio::runtime::Runtime;
+    #[test]
+    fn test_echo() {
+        let rt = Runtime::new().unwrap();
+
+        // start server
+        rt.spawn(run_server());
+
+        // wait for server to come up
+        std::thread::sleep(std::time::Duration::from_millis(50));
+
+        let client = Client::new();
+
+        // make requests
+        let req = client.request(
+            Request::builder()
+                .method(Method::GET)
+                .uri("http://localhost:8080/echo")
+                .body(Body::empty())
+                .unwrap(),
+        );
+
+        let res = rt.block_on(req).unwrap();
+        let body = rt.block_on(to_bytes(res.into_body())).unwrap();
+
+        println!("{:?}", body);
+
+        assert_eq!(
+            std::str::from_utf8(&body).unwrap(),
+            "{}"
+        );
+    }
 }
